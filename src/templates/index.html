@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price</title>    
+    
+    <style>
+        body {
+            background-image: url('/src/assets/pexels-albin-berlin-919073.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(to right, #ff14919a, #4169e188); /* Pink to Blue gradient */
+            border-radius: 10px;
+            opacity: 0.9;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Adding a shadow for depth */
+        }
+
+        h1 {
+            text-align: center;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.8); /* White background for better contrast */
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Predictive Analysis</h1>
+        <form action="{{ url_for('predict')}}" method="POST">
+            <div class="form-group">
+                <label for="Year">Year</label>
+                <input type="number" name="Year" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Present_Price">Showroom Price (in Lakhs)</label>
+                <input type="number" name="Present_Price" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Kms_Driven">Kilometers Driven</label>
+                <input type="number" name="Kms_Driven" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Owner">Number of Previous Owners</label>
+                <select name="Owner" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="Fuel_Type_Petrol">Fuel Type</label>
+                <select name="Fuel_Type_Petrol" required>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="CNG">CNG</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="Seller_Type_Individual">Are you a Dealer or Individual?</label>
+                <select name="Seller_Type_Individual" required>
+                    <option value="Dealer">Dealer</option>
+                    <option value="Individual">Individual</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="Transmission_Manual">Transmission Type</label>
+                <select name="Transmission_Manual" required>
+                    <option value="Manual">Manual</option>
+                    <option value="Automatic">Automatic</option>
+                </select>
+            </div>
+
+            <div align="center">
+                <button type="submit">Calculate Selling Price</button>
+            </div>
+        </form>
+        <p align="center">{{ prediction_text }}</p>
+    </div>
+    <footer>&copy; 2024 Mustafa</footer>
+</body>
+</html>
