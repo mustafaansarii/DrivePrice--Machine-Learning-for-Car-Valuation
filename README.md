@@ -2,7 +2,7 @@
 # Car Price Prediction Model 
 ## Introduction
 [live Car Price Prediction Model here](https://huggingface.co/spaces/Mustafaansari/CAR-PRICE-PREDICTION)
-This documentation provides an overview of a machine learning model designed to predict car prices based on various features. Additionally, it describes the user interface (UI) built around the model to facilitate user interaction and make predictions.
+
 
 ## Machine Learning Model
 
