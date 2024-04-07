@@ -1,8 +1,8 @@
 
 # Car Price Prediction Model 
 ## Introduction
-[live Car Price Prediction Model here](https://driveprice-machine-learning-for-car.onrender.com/)
-[live on render](https://huggingface.co/spaces/Mustafaansari/CAR-PRICE-PREDICTION)
+[live on render](https://driveprice-machine-learning-for-car.onrender.com/)
+[live Car Price Prediction Model here](https://huggingface.co/spaces/Mustafaansari/CAR-PRICE-PREDICTION)
 
 
 ## Machine Learning Model
