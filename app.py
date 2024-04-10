@@ -1,12 +1,22 @@
 from flask import Flask, render_template, request, redirect
 from flask_cors import CORS, cross_origin
-import joblib
 import pandas as pd
 import numpy as np
+import modelbit
 
 app = Flask(__name__)
 cors = CORS(app)
-pipeline_model = joblib.load('pipeline_model.joblib')
+
+def get_prediction(name, company, year, kms_driven, fuel_type):
+    result = modelbit.get_inference(
+        region="ap-south-1",
+        workspace="mustafaansari",
+        deployment="predict_car_price",
+        data=[name, company, year, kms_driven, fuel_type]
+    )
+    prediction = result['data']
+    rounded_prediction = round(float(prediction), 2)
+    return str(rounded_prediction)
 
 car = pd.read_csv('Cleaned_Car_data.csv')
 
@@ -29,10 +39,9 @@ def predict():
     fuel_type = request.form.get('fuel_type')
     driven = float(request.form.get('kilo_driven'))  # Convert to float
 
-    prediction = pipeline_model.predict(pd.DataFrame(columns=['name', 'company', 'year', 'kms_driven', 'fuel_type'],
-                                                     data=np.array([car_model, company, year, driven, fuel_type]).reshape(1, 5)))
+    prediction = get_prediction(car_model, company, year, driven, fuel_type)
     # Return the prediction as a response
-    return str(np.round(prediction[0], 2))
+    return prediction
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=50002)
