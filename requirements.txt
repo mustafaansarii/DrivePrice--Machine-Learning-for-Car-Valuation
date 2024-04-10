@@ -1,3 +1,6 @@
 Flask
-modelbit
+Flask-Cors
 gunicorn
+numpy
+pandas
+joblib

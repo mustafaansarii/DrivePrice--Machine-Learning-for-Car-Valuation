@@ -2,139 +2,135 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Price Prediction</title>    
-    <link rel="shortcut icon" href="https://images.pexels.com/photos/919073/pexels-photo-919073.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" type="image/x-icon">
+    <title>Car Price Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
     <style>
         body {
-            background-image: url('https://images.pexels.com/photos/919073/pexels-photo-919073.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover;
-            background-position: center;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: white;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(to right, #ff14919a, #4169e188); /* Pink to Blue gradient */
-            border-radius: 10px;
-            opacity: 0.9;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Adding a shadow for depth */
-        }
-
-        h1 {
-            text-align: center;
-            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 5px;
-            box-sizing: border-box;
-            background-color: rgba(255, 255, 255, 0.8); /* White background for better contrast */
-        }
-
-        button {
-            padding: 12px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #666;
+            background: linear-gradient(45deg, pink, lightblue);
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Car Price Prediction</h1>
-        <form action="{{ url_for('predict')}}" method="POST">
-            <div class="form-group">
-                <label for="Year">Year</label>
-                <input type="number" name="Year" required>
-            </div>
 
-            <div class="form-group">
-                <label for="Present_Price">Showroom Price (in Lakhs)</label>
-                <input type="number" name="Present_Price" required>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card mt-5">
+                <div class="card-header text-center">
+                    <h1>Welcome to Car Price Predictor</h1>
+                </div>
+                <div class="card-body">
+                    <div class="col-12 text-center">
+                        <h5>This app predicts the price of a car you want to sell. Try filling the details below:</h5>
+                    </div>
+                    <form method="post" accept-charset="utf-8" name="Modelform">
+                        <div class="form-group">
+                            <label for="company"><b>Select the company:</b></label><br>
+                            <select class="selectpicker form-control" id="company" name="company" required
+                                    onchange="loadCarModels(this.id, 'car_models')">
+                                {% for company in companies %}
+                                <option value="{{ company }}">{{ company }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="car_models"><b>Select the model:</b></label><br>
+                            <select class="selectpicker form-control" id="car_models" name="car_models" required>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="year"><b>Select Year of Purchase:</b></label><br>
+                            <select class="selectpicker form-control" id="year" name="year" required>
+                                {% for year in years %}
+                                <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fuel_type"><b>Select the Fuel Type:</b></label><br>
+                            <select class="selectpicker form-control" id="fuel_type" name="fuel_type" required>
+                                {% for fuel in fuel_types %}
+                                <option value="{{ fuel }}">{{ fuel }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="kilo_driven"><b>Enter the Number of Kilometres that the car has travelled:</b></label><br>
+                            <input type="text" class="form-control" id="kilo_driven" name="kilo_driven"
+                                   placeholder="Enter the kilometres driven" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block" onclick="sendData()">Predict Price</button>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h4><span id="prediction"></span></h4>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="Kms_Driven">Kilometers Driven</label>
-                <input type="number" name="Kms_Driven" required>
-            </div>
-
-            <div class="form-group">
-                <label for="Owner">Number of Previous Owners</label>
-                <select name="Owner" required>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="Fuel_Type_Petrol">Fuel Type</label>
-                <select name="Fuel_Type_Petrol" required>
-                    <option value="Petrol">Petrol</option>
-                    <option value="Diesel">Diesel</option>
-                    <option value="CNG">CNG</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="Seller_Type_Individual">Are you a Dealer or Individual?</label>
-                <select name="Seller_Type_Individual" required>
-                    <option value="Dealer">Dealer</option>
-                    <option value="Individual">Individual</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="Transmission_Manual">Transmission Type</label>
-                <select name="Transmission_Manual" required>
-                    <option value="Manual">Manual</option>
-                    <option value="Automatic">Automatic</option>
-                </select>
-            </div>
-
-            <div align="center">
-                <button type="submit">Calculate Selling Price</button>
-            </div>
-        </form>
-        <p align="center">{{ prediction_text }}</p>
+        </div>
     </div>
-    <footer>&copy; 2024 Mustafa</footer>
+</div>
+
+<script>
+    function loadCarModels(companyId, carModelId) {
+        var company = document.getElementById(companyId);
+        var carModel = document.getElementById(carModelId);
+        console.log(company.value);
+        carModel.value = "";
+        carModel.innerHTML = "";
+        {% for company in companies %}
+        if (company.value == "{{ company }}") {
+            {% for model in car_models %}
+            {% if company in model %}
+            var newOption = document.createElement("option");
+            newOption.value = "{{ model }}";
+            newOption.innerHTML = "{{ model }}";
+            carModel.options.add(newOption);
+            {% endif %}
+            {% endfor %}
+        }
+        {% endfor %}
+    }
+
+    function formHandler(event) {
+        event.preventDefault(); // Don't submit the form normally
+    }
+
+    function sendData() {
+        document.querySelector('form').addEventListener("submit", formHandler);
+
+        var fd = new FormData(document.querySelector('form'));
+
+        var xhr = new XMLHttpRequest({mozSystem: true});
+
+        xhr.open('POST', '/predict', true);
+        document.getElementById('prediction').innerHTML = "Wait! Predicting Price.....";
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                document.getElementById('prediction').innerHTML = "Prediction: ₹" + xhr.responseText;
+            }
+        };
+
+        xhr.onload = function () {
+        };
+
+        xhr.send(fd);
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>

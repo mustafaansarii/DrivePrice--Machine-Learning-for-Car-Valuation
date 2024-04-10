@@ -1,46 +1,38 @@
-from flask import Flask, render_template, request
-import modelbit
+from flask import Flask, render_template, request, redirect
+from flask_cors import CORS, cross_origin
+import joblib
+import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
+cors = CORS(app)
+pipeline_model = joblib.load('pipeline_model.joblib')
 
-@app.route('/')
+car = pd.read_csv('Cleaned_Car_data.csv')
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', prediction_text="")
+    companies = sorted(car['company'].unique())
+    car_models = sorted(car['name'].unique())
+    year = sorted(car['year'].unique(), reverse=True)
+    fuel_type = car['fuel_type'].unique()
+
+    companies.insert(0, 'Select Company')
+    return render_template('index.html', companies=companies, car_models=car_models, years=year, fuel_types=fuel_type)
 
 @app.route('/predict', methods=['POST'])
+@cross_origin()
 def predict():
-    if request.method == 'POST':
-        # Retrieve form data
-        year = int(request.form['Year'])
-        present_price = float(request.form['Present_Price'])
-        kms_driven = float(request.form['Kms_Driven'])
-        num_owners = int(request.form['Owner'])
-        fuel_type = request.form['Fuel_Type_Petrol']
-        seller_type = request.form['Seller_Type_Individual']
-        transmission_type = request.form['Transmission_Manual']
+    company = request.form.get('company')
+    car_model = request.form.get('car_models')
+    year = request.form.get('year')
+    fuel_type = request.form.get('fuel_type')
+    driven = float(request.form.get('kilo_driven'))  # Convert to float
 
-        # Mapping the fuel type, seller type, and transmission type to numerical values
-        fuel_type_mapping = {"Petrol": 0, "Diesel": 1, "CNG": 2}
-        seller_type_mapping = {"Dealer": 1, "Individual": 0}
-        transmission_type_mapping = {"Manual": 0, "Automatic": 1}
-
-        # Getting the numerical values
-        fuel_type_numeric = fuel_type_mapping.get(fuel_type)
-        seller_type_numeric = seller_type_mapping.get(seller_type)
-        transmission_type_numeric = transmission_type_mapping.get(transmission_type)
-
-        # Getting the inference
-        inference_result = modelbit.get_inference(
-            region="ap-south-1",
-            workspace="mustafaansari",
-            deployment="predict_car_price",
-            data=[year, present_price, kms_driven, num_owners, fuel_type_numeric, seller_type_numeric, transmission_type_numeric]
-        )
-
-        # Extracting the output message from the dictionary and removing the quotes
-        output_message = inference_result['data'].strip('"')
-
-        return render_template('index.html', prediction_text=output_message)
+    prediction = pipeline_model.predict(pd.DataFrame(columns=['name', 'company', 'year', 'kms_driven', 'fuel_type'],
+                                                     data=np.array([car_model, company, year, driven, fuel_type]).reshape(1, 5)))
+    # Return the prediction as a response
+    return str(np.round(prediction[0], 2))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
