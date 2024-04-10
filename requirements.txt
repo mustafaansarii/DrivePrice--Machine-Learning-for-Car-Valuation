@@ -17,3 +17,6 @@ six
 sklearn
 threadpoolctl
 Werkzeug
+scikit-learn 
+scipy 
+matplotlib
