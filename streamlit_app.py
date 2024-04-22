@@ -48,7 +48,7 @@ def main():
 
     car_model = st.selectbox("Select Car Model", car_models)
     year = sorted(car['year'].unique(), reverse=True)
-    year_val = st.selectbox("Select Year", year)
+    year_val = st.slider("Select Year", 1995,2019)
     fuel_type = car['fuel_type'].unique()
     fuel_type_val = st.selectbox("Select Fuel Type", fuel_type)
     driven = st.number_input("Enter Kilometers Driven")
