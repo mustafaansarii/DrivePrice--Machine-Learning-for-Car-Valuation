@@ -37,7 +37,7 @@ def main():
 
     # Main content
     st.write("""
-    ## Car Details
+    ## Fill Car Details
     """)
 
     # Car company selection
