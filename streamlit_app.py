@@ -2,7 +2,16 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import modelbit
+def header():
+    st.markdown("""
+    <div style="background-color:#3498DB;padding:10px;border-radius:10px">
+    <h1 style="color:white;text-align:center;">Car Price Prediction</h1>
+    <p style="color:white;text-align:center;">predicts the price of cars based on various features such as car model, company, manufacturing year, kilometers driven, and fuel type</p>
+    </div>
+    """, unsafe_allow_html=True)
 
+# Call the header function to display it at the top of the app
+header()
 
 def get_prediction(name, company, year, kms_driven, fuel_type):
     result = modelbit.get_inference(
@@ -19,14 +28,14 @@ car = pd.read_csv('Cleaned_Car_data.csv')
 
 def main():
     
-    st.title("Car Price Prediction")
+
 
     st.sidebar.image("src/style.gif", use_column_width=True)
     st.sidebar.image("src/car.jpg", use_column_width=True)
     st.sidebar.title("Developer Contact")
     st.sidebar.info(
         """
-        
+        **web:** [mustafaansari.rf.gd](https://mustafaansari.rf.gd/?i=1)  
         **Email:** mustafaansari@mail.com  
     **LinkedIn:** [LinkedIn/mustafaansaari/](https://www.linkedin.com/in/mustafaansaari/)  
     **GitHub:** [github/mustafaansaari/](https://github.com/mustafaansarii)  
@@ -48,7 +57,7 @@ def main():
 
     car_model = st.selectbox("Select Car Model", car_models)
     year = sorted(car['year'].unique(), reverse=True)
-    year_val = st.slider("Select Year", 1995,2019)
+    year_val = st.slider("Select Year", 1995,2024)
     fuel_type = car['fuel_type'].unique()
     fuel_type_val = st.selectbox("Select Fuel Type", fuel_type)
     driven = st.number_input("Enter Kilometers Driven")
