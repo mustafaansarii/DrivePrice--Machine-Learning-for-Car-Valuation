@@ -1,6 +1,6 @@
 # Car Price Prediction
-### [LIve on streamlit](https://car-price-valuation-prediction.streamlit.app/) <br>
-[LIve on Render](https://car-price-predictor-k9en.onrender.com/)
+### [LIve on streamlit](https://driveprice--machine-learning-for-car-valuation.streamlit.app/) <br>
+[LIve on Render](https://driveprice-machine-learning-for-car.onrender.com/)
 ## Introduction
 
 The Car Price Prediction Web Application is a streamlit web application that predicts the price of cars based on various features such as car model, company, manufacturing year, kilometers driven, and fuel type. The prediction model is built using scikit-learn (sklearn), a popular machine learning library in Python. The dataset used for training the model is sourced from Kaggle, a platform for data science competitions and datasets.
