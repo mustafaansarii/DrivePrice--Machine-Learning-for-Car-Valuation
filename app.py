@@ -9,7 +9,7 @@ cors = CORS(app)
 
 def get_prediction(name, company, year, kms_driven, fuel_type):
     result = modelbit.get_inference(
-        region="ap-south-1",
+        region="us-east-2.aws",
         workspace="mustafaansari",
         deployment="predict_car_price",
         data=[name, company, year, kms_driven, fuel_type]
